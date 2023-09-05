@@ -10,15 +10,15 @@ from drf_spectacular.utils import extend_schema
 from .mixins import ApiAuthMixin
 # from .selectors import  
 from .services import register
+from .selectors import get_user
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegisterApi(APIView):
-
     class InputRegisterSerializer(serializers.Serializer):
         email = serializers.EmailField(max_length=255)
         full_name = serializers.CharField(max_length=35)
-        # bio = serializers.CharField(max_length=1000 ,required=False)
         password = serializers.CharField(
                 validators=[
                         number_validator,
@@ -46,7 +46,7 @@ class RegisterApi(APIView):
         token = serializers.SerializerMethodField("get_token")
         class Meta:
             model = BaseUser
-            fields = ("email" ,"full_name" ,"created","updated" ,"token")
+            fields = ("email" ,"full_name" ,"customer_status" ,"created","updated" ,"token")
         def get_token(self, user):
             data = dict()
             token_class = RefreshToken
@@ -74,4 +74,25 @@ class RegisterApi(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                     )
         return Response(self.OutPutRegisterSerializer(user, context={"request":request}).data)
+
+class DetaiUser(APIView):
+    permission_classes = [IsAuthenticated] 
+
+    class OutPutDetailUserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = BaseUser
+            fields = ("email" ,"full_name" ,"customer_status" ,"created","updated")
+
+    @extend_schema(
+        responses=OutPutDetailUserSerializer,
+    )
+    def get(self ,request):
+
+        if request.user.is_authenticated:
+            print("ok")
+        print("*" * 50)
+        print(request.user)
+        print("*" * 50)
+        query = get_user(pk=request.user.pk)
+        return Response(self.OutPutDetailUserSerializer(query, context={"request":request}).data)
 

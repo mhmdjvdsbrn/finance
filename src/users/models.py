@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin 
 from django.contrib.auth.models import AbstractBaseUser 
 from django.contrib.auth.models import BaseUserManager as BUM 
+from enum import Enum
+
+
 
 class BaseModel(models.Model):
 
@@ -13,11 +16,11 @@ class BaseModel(models.Model):
 
 
 class BaseUserManager(BUM):
-    def create_user(self, email,full_name, is_admin=False, password=None):
+    def create_user(self, email,full_name, password=None):
         if not email:
             raise ValueError("Users must have an email address")
 
-        user = self.model(email=self.normalize_email(email.lower()),full_name=full_name, is_admin=is_admin,)
+        user = self.model(email=self.normalize_email(email.lower()),full_name=full_name)
 
         if password is not None:
             user.set_password(password)
@@ -29,24 +32,26 @@ class BaseUserManager(BUM):
 
         return user
 
-    def create_superuser(self,full_name, email, password=None):
-        user = self.create_user(
-            email=email,
-            full_name=full_name,
-            is_admin=True,
-            password=password,
-        )
-
-        user.is_superuser = True
-        user.save(using=self._db)
-
-        return user
-
+class CustomerStatus(Enum):
+    NORMAL = 'Normal'
+    BRONZE = 'Bronze'
+    SILVER = 'Silver'
+    GOLD = 'GOLD'
 
 class BaseUser(BaseModel ,AbstractBaseUser ,PermissionsMixin):
+
+    GENDER_CHOICES = [
+        ('N', 'Normal'),
+        ('B', 'Bronze'),
+        ('S', 'Silver'),
+        ('G', 'Gold'),
+
+    ]
     email = models.EmailField(verbose_name="email address", unique=True)
     full_name = models.CharField(max_length=35)
-    is_admin = models.BooleanField(default=False)
+    customer_status = models.CharField(max_length=1, choices=GENDER_CHOICES, default='N')
+
+
     objects = BaseUserManager()
 
     USERNAME_FIELD = "email"
