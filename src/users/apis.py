@@ -87,12 +87,6 @@ class DetaiUser(APIView):
         responses=OutPutDetailUserSerializer,
     )
     def get(self ,request):
-
-        if request.user.is_authenticated:
-            print("ok")
-        print("*" * 50)
-        print(request.user)
-        print("*" * 50)
         query = get_user(pk=request.user.pk)
         return Response(self.OutPutDetailUserSerializer(query, context={"request":request}).data)
 
