@@ -16,7 +16,7 @@ class CheckStartedEnded(models.Model):
         if not self.start_time:
             self.start_time = timezone.now()
         if not self.end_time:
-            self.end_time = self.start_time + timedelta(days=30)
+            self.end_time = self.start_time + timedelta(days=31)
         super(CheckStartedEnded, self).save(*args, **kwargs)
 
     class Meta:
@@ -29,18 +29,11 @@ class CheckStartedEnded(models.Model):
         ]
 
 class Order(CheckStartedEnded):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True ,related_name="user")
+    order_id = models.IntegerField(primary_key=True ,blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True ,related_name="user")
     service = models.ForeignKey(Service , on_delete=models.CASCADE ,related_name="service")
     pay_time = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
-
-    def deactivate_if_timeout_expired(self):
-        now = timezone.now()
-        expiration_time = self.end_time
-
-        if now >= expiration_time:
-            self.active = False
-            self.save()
 
     def __str__(self):
         return self.user.email

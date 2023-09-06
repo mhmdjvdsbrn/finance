@@ -46,7 +46,7 @@ class RegisterApi(APIView):
         token = serializers.SerializerMethodField("get_token")
         class Meta:
             model = BaseUser
-            fields = ("email" ,"full_name" ,"customer_status" ,"created","updated" ,"token")
+            fields = ("email" ,"full_name" ,"created","updated" ,"token")
         def get_token(self, user):
             data = dict()
             token_class = RefreshToken
@@ -81,7 +81,7 @@ class DetaiUser(APIView):
     class OutPutDetailUserSerializer(serializers.ModelSerializer):
         class Meta:
             model = BaseUser
-            fields = ("email" ,"full_name" ,"customer_status" ,"created","updated")
+            fields = ("email" ,"full_name" ,"created","updated")
 
     @extend_schema(
         responses=OutPutDetailUserSerializer,
