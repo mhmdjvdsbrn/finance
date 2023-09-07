@@ -32,6 +32,8 @@ urlpatterns = [
     path('users/',include(('users.urls' ,'users'))),
     path('auth/',include(('athentication.urls' ,'auth'))),
     path('order/',include(('orders.urls' ,'order'))),
+    path('finance/',include(('algorithms.urls' ,'finance'))),
+
 
 
 ]

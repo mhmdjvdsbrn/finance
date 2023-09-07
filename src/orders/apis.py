@@ -3,12 +3,11 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from django.db import transaction
-
 from drf_spectacular.utils import extend_schema
-from .models import Order
+from .models import Order 
 from services.models import Service
 from .services import create_order 
-from .selectors import order_detail
+from .selectors import order_detail 
 from users.mixins import ApiAuthMixin
 from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
@@ -75,7 +74,7 @@ class DetailOrderApi(APIView):
 
         def get_period(self ,order):
             end_time = str(order.end_time)
-            time_now=str(timezone.now())
+            time_now =str(timezone.now())
             date1 = datetime.fromisoformat(end_time)
             date2 = datetime.fromisoformat(time_now)
             time_difference = date1 - date2
@@ -96,7 +95,7 @@ class DetailOrderApi(APIView):
             query = order_detail(user=request.user)
         except Exception as ex:
             return Response(
-                {"detail": "Filter Error - " + str(ex)},
+                {"detail": "Not Found -- " + str(ex)},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         serializer = self.OutPutDetailSerializer(query)
@@ -148,3 +147,6 @@ class UpdateOrderApi(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(self.OutPutUpdateSerializer(updated_order).data)
+
+
+

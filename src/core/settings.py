@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'athentication',
     'services',
     'orders',
+    'algorithms'
 ]
 
 MIDDLEWARE = [
@@ -82,8 +83,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'finance',
+        'USER': 'root',
+        'PASSWORD': 'new_password',
+        'HOST': 'localhost',  # Replace with your MySQL host if it's not on localhost
+        'PORT': '3306',       # Replace with your MySQL port if it's not the default 3306
     }
 }
 

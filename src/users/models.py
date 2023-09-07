@@ -11,7 +11,6 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-
 class BaseUserManager(BUM):
     def create_user(self, email,full_name , is_admin=False, password=None):
         if not email:
@@ -29,7 +28,7 @@ class BaseUserManager(BUM):
 
         return user
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, email ,full_name="admin", password=None):
         user = self.create_user(
             email=email,
             is_admin=True,

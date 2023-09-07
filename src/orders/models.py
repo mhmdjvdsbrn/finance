@@ -4,7 +4,6 @@ from services.models import Service
 from django.db.models.query import F, Q
 from datetime import timedelta
 from django.utils import timezone
-
 User = get_user_model()
 
 
@@ -29,7 +28,7 @@ class CheckStartedEnded(models.Model):
         ]
 
 class Order(CheckStartedEnded):
-    order_id = models.IntegerField(primary_key=True ,blank=True)
+    order_id = models.AutoField(primary_key=True ,blank=True)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True ,related_name="user")
     service = models.ForeignKey(Service , on_delete=models.CASCADE ,related_name="service")
     pay_time = models.DateTimeField(auto_now_add=True)
@@ -37,6 +36,7 @@ class Order(CheckStartedEnded):
 
     def __str__(self):
         return self.user.email
+
 
 
 
