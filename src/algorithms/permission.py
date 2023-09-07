@@ -21,7 +21,7 @@ class HasSmartMoneyInflowView(permissions.BasePermission):
         user = request.user
         if user.is_authenticated:
             has_bronze_user = Order.objects.filter(
-                Q(service__plan_name="G") | Q(service__plan_name="S") ,
+                service__plan_name="G",
                 user=user,
                 end_time__gte = datetime.datetime.now(),
             ).exists()
@@ -34,7 +34,7 @@ class HasSmartMoneyOutflowView(permissions.BasePermission):
         user = request.user
         if user.is_authenticated:
             has_bronze_user = Order.objects.filter(
-                service__plan_name="G",
+                Q(service__plan_name="G") | Q(service__plan_name="S") 
                 user=user,
                 end_time__gte = datetime.datetime.now(),
             ).exists()
